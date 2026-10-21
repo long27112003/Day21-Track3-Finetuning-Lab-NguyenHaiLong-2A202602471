@@ -93,6 +93,18 @@ Bản fine-tune LoRA đã tạo ra một bước nhảy vọt ấn tượng trê
 
 Nguyên nhân trực tiếp dẫn tới hiện tượng này là "quên thảm họa" (catastrophic forgetting): khi huấn luyện mô hình 4B tham số trên một tập dữ liệu nhỏ (225 mẫu) chỉ toàn định dạng JSON của bài toán CSKH mà không có bất kỳ dữ liệu đối chứng tổng quát nào đi kèm, các trọng số LoRA đã bị thiên lệch hoàn toàn về phân phối chuyên biệt này. Kết quả này phản ánh bản chất thực tế trong công nghiệp: việc fine-tune một tác vụ hẹp nếu không có cơ chế bảo toàn tri thức (chẳng hạn như trộn 1–5% replay data kiến thức chung theo deck §6.3) sẽ làm hỏng năng lực đàm thoại và suy luận phổ quát của nền tảng LLM gốc.
 
+### 5.1 Thí nghiệm bổ sung sau NB5: replay tổng quát
+
+Tôi giữ nguyên baseline (b), 50 câu target, 15 câu regression và 30 optimizer steps của NB3. Tám rồi 11 mẫu chỉ dẫn tổng quát được trộn vào 225 mẫu train theo seed 42; script kiểm tra tỷ lệ 1–5% và cấm trùng nguyên văn với holdout. Đây là hai lượt huấn luyện/đánh giá GPU thật, không thay `results/verdict.json` hoặc bốn run đối chứng gốc.
+
+| Run | Replay / tổng train | Target | Regression | Format | Verdict |
+|---|---:|---:|---:|---:|---|
+| LoRA `correct` gốc | 0 / 225 | 0.9700 | 0.5444 | 1.0000 | FAIL |
+| Replay thử 1 | 8 / 233 (3,43%) | 0.9800 | 0.7444 | 1.0000 | FAIL |
+| Replay thử 2 | 11 / 236 (4,66%) | 0.9950 | 0.7444 | 1.0000 | FAIL |
+
+Ngưỡng hồi quy là `0.7911 - 0.0200 = 0.7711`. Replay nâng điểm hồi quy thêm 0.2000 so với LoRA gốc, nhưng vẫn thấp hơn ngưỡng 0.0267; do đó không thể tuyên bố `PASSED`. Lượt 11 mẫu còn tăng target so với lượt 8 mẫu nhưng không cải thiện regression. Hai file `results/replay_3pct_verdict.json` và `results/replay_verdict.json` lưu điểm, dự đoán của 15 câu và verdict để kiểm toán. Độ trễ của replay được đo trên RTX 3060 12 GB, còn bảng NB2/NB5 gốc trên T4; không so sánh trực tiếp hai số độ trễ. Việc tiếp tục chọn replay theo đúng 15 câu hồi quy này sẽ làm bẩn holdout; cần một tập kiểm định mới trước khi thử chiến lược dữ liệu tiếp theo.
+
 ---
 
 ## 6. Định tính — bắt buộc có cả ca THUA
@@ -115,7 +127,7 @@ Có một mẫu chung rất rõ rệt ở tất cả các ca fine-tune bị thua
 **Kết luận (≥150 từ).** 
 Nếu xét dưới góc độ một hệ thống triển khai toàn diện phục vụ đa mục đích, ta **chưa nên deploy** bản fine-tune này ngay lập tức vào production, bởi vì mô hình đã không vượt qua cổng kiểm soát hồi quy (năng lực kiến thức tổng quát sụt giảm mạnh -0.247). Tuy nhiên, nếu hệ thống được thiết kế theo kiến trúc microservices chuyên biệt — nơi model chỉ đóng vai trò một module backend biệt lập nhận văn bản ticket và trả về JSON phân loại để định tuyến yêu cầu cho nhân viên hỗ trợ — thì bản fine-tune này lại là một ứng viên xuất sắc: nó đạt độ chính xác tác vụ mục tiêu lên tới 97.0% (vượt trội hoàn toàn so với baseline prompt tối ưu 76.5%), định dạng JSON chuẩn xác 100%, và tốc độ xử lý nhanh chóng (1.4s). 
 
-Đòn bẩy kỹ thuật thực sự quyết định thành công trong lab này không phải là việc cố gắng tăng rank lên mức cực đại (thể hiện qua việc `attn_only` rank 283 chỉ hòa điểm target với `correct` rank 16), mà nằm ở: (1) che loss mask chính xác (`assistant-only`) để không dạy mô hình học vẹt prompt, (2) chọn đúng thang learning rate cho LoRA (1e-4 thay vì thang 1e-5 của full-FT), và (3) phân bổ adapter toàn diện trên mọi lớp tuyến tính của text decoder (`all-linear`). Để sẵn sàng cho việc đưa vào vận hành thực tế không có rủi ro, bước tiếp theo là tiến hành huấn luyện lại với việc trộn bổ sung 1–5% dữ liệu tổng quát (replay data) nhằm khắc phục triệt để hiện tượng quên thảm họa.
+Đòn bẩy kỹ thuật thực sự quyết định thành công trong lab này không phải là việc cố gắng tăng rank lên mức cực đại (thể hiện qua việc `attn_only` rank 283 chỉ hòa điểm target với `correct` rank 16), mà nằm ở: (1) che loss mask chính xác (`assistant-only`) để không dạy mô hình học vẹt prompt, (2) chọn đúng thang learning rate cho LoRA (1e-4 thay vì thang 1e-5 của full-FT), và (3) phân bổ adapter toàn diện trên mọi lớp tuyến tính của text decoder (`all-linear`). Replay 3,43% và 4,66% đã cải thiện năng lực tổng quát nhưng chưa đủ để qua cổng; bản LoRA vẫn chưa nên triển khai cho tác vụ đa mục đích. Bước tiếp theo cần một tập kiểm định mới và chiến lược bảo toàn năng lực tổng quát được đánh giá độc lập.
 
 **Ba điều tôi học được** (cụ thể, không generic):
 1. **Rank không phải là đòn bẩy vạn năng**: Thí nghiệm đối chứng giữa `attn_only` ($r=283$) và `correct` ($r=16$) với cùng 32.46M tham số đã chứng minh rõ ràng: rank cao chỉ làm giảm train loss giả tạo (0.5366 vs 0.6254) do overfit, chứ không giúp ích cho bài toán đánh giá thực tế. Vị trí gắn adapter bao phủ toàn bộ text-linear mới là yếu tố quyết định chất lượng biểu diễn.
@@ -123,7 +135,7 @@ Nếu xét dưới góc độ một hệ thống triển khai toàn diện phụ
 3. **Cổng hồi quy 4 nhóm là công cụ bảo hiểm bắt buộc**: Nếu chỉ đo đạc dựa trên accuracy của tác vụ CSKH (97.0%) hoặc train loss, ta sẽ ngộ nhận rằng việc huấn luyện thành công rực rỡ. Việc đo thêm nhóm câu hỏi tổng quát (regression) đã bóc trần hiện tượng quên thảm họa (-0.247), điều mà perplexity hay accuracy cục bộ không bao giờ chỉ ra được.
 
 **Nếu có thêm 2 giờ nữa, tôi sẽ thử:**
-Tôi sẽ tạo một bộ dữ liệu trộn gồm 250 mẫu CSKH kết hợp với 15–20 mẫu chỉ dẫn đàm thoại tổng quát (tương đương ~5% replay data) và huấn luyện lại cấu hình `correct`, sau đó chạy lại cổng hồi quy để chứng minh rằng mô hình vừa giữ vững target ≥ 0.95 vừa đưa `regression Δ` về mức an toàn (≥ -0.02) để chuyển phán quyết sang `PASSED`.
+Tôi sẽ xây một tập hồi quy mới, không dùng để chọn mẫu replay, rồi kiểm tra liệu cải thiện 0.2000 trên bộ hiện tại có chuyển sang tập mới hay không. Nếu vẫn hụt, tôi sẽ mở rộng dữ liệu tổng quát từ nguồn độc lập và so sánh một chiến lược giữ năng lực gốc khác với cùng ngân sách huấn luyện; mọi kết luận triển khai chỉ dựa trên đánh giá chưa được dùng để điều chỉnh mô hình.
 
 ---
 

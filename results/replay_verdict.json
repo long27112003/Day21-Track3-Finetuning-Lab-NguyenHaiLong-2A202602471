@@ -1,0 +1,49 @@
+{
+  "experiment": "1-5% held-out-safe general replay",
+  "replay_count": 11,
+  "train_count": 225,
+  "max_steps": 30,
+  "train_seconds": 709.2,
+  "train_loss": 0.3805,
+  "optimized_baseline": {
+    "target": 0.765,
+    "regression": 0.7911111111111111,
+    "format": 1.0,
+    "latency_ms": 1001.3751268000077,
+    "n": 50,
+    "extra": {}
+  },
+  "replay_scores": {
+    "target": 0.995,
+    "regression": 0.7444444444444444,
+    "format": 1.0,
+    "latency_ms": 2277.858741999662,
+    "n": 50,
+    "extra": {}
+  },
+  "verdict": {
+    "passed": false,
+    "reasons": [
+      "general capability regressed by 0.047 (tolerance 0.020). See deck §6.3 — add 1-5% replay data."
+    ],
+    "target_delta": 0.22999999999999998,
+    "regression_delta": -0.046666666666666745
+  },
+  "regression_predictions": [
+    "Thủ đô của Việt Nam là thành phố Hà Nội.",
+    "Hai đại dương lớn nhất thế giới là Đại Tây Dương và Thái Bình Dương.",
+    "1 km bằng 1000 mét.",
+    "Chúc bạn một ngày sinh nhật thật vui vẻ và tràn đầy hạnh phúc!",
+    "I like reading books.",
+    "Sông dài nhất Việt Nam là sông Hồng.",
+    "2 mũ 10 bằng 1024.",
+    "Tập thể dục giúp cải thiện sức khỏe tim mạch, làm giảm nguy cơ mắc các bệnh như tiểu đường và tăng huyết áp.",
+    "Truyện Kiều là tác phẩm của nhà thơ lớn Nguyễn Du.",
+    "Một năm có 12 tháng.",
+    "Nước sôi ở **100 độ C** tại áp suất thường (áp suất khí quyển tiêu chuẩn là 1 atm).",
+    "Dâu tây.",
+    "{\"intent\": \"tinh_thanh\", \"lesson\": \"Sự kiên trì và nỗ lực không ngừng sẽ giúp con người đạt được mục tiêu và thành công.\", \"example\": \"Việc học tập hay rèn luyện kỹ năng cần sự bền bỉ theo thời gian.\", \"origin\": \"Truyện cổ tích Việt Nam\"}",
+    "Thành phố Hồ Chí Minh trước đây có tên là **Saigon**.",
+    "Quang hợp là quá trình thực vật, tảo và một số vi khuẩn sử dụng năng lượng ánh sáng mặt trời để chuyển hóa carbon dioxide và nước thành đường glucose (tinh bột) và oxy."
+  ]
+}

@@ -170,3 +170,24 @@ Chạy `make verify` trước khi nén file: nó kiểm tra artefact **và** ki�
 sánh bạn được chấm là một phép so sánh công bằng.
 
 Điểm không nằm ở chỗ fine-tune của bạn thắng. Điểm nằm ở chỗ bạn **biết** nó có thắng hay không.
+
+### Thử sửa hồi quy sau phán quyết gốc
+
+`results/verdict.json` hiện ghi `passed: false` vì điểm regression của adapter gốc
+giảm từ 0.7911 xuống 0.5444. Rubric vẫn chấm phán quyết FAIL nếu báo cáo trung
+thực. Để kiểm tra giả thuyết thiếu dữ liệu tổng quát, sau NB1 có thể chạy thêm
+`python scripts/replay_repair.py` trên cùng GPU/T4. Script trộn 11 mẫu replay độc
+lập (~4.7%), kiểm tra chúng không trùng câu hỏi hồi quy, giữ số optimizer step
+của NB3, rồi chấm lại trên baseline (b) và holdout đã đóng băng. Kết quả mới chỉ
+được ghi vào `results/replay_verdict.json` và `adapters/correct_replay/`; các
+artifact gốc của NB3–NB5 không bị thay. Chỉ coi là **đạt cổng** khi verdict
+trong file mới là `passed: true`.
+Lượt thử trước với 8 mẫu (~3.4%) được lưu ở `results/replay_3pct_verdict.json`:
+target 0.980, regression 0.7444, vẫn `passed: false` dù cải thiện so với 0.5444
+của adapter ban đầu. Hai lượt đều giữ nguyên 15 câu hồi quy và baseline (b).
+Lượt 11 mẫu (~4.66%) ở `results/replay_verdict.json` đạt target 0.995 và
+regression 0.7444, vẫn `passed: false` (ngưỡng 0.7711). Sau hai phép thử,
+không tiếp tục chọn dữ liệu theo 15 câu holdout để tránh điều chỉnh theo tập chấm.
+Trên Windows với PyTorch 2.6 CUDA 12.4, bỏ `torchao` khỏi môi trường LoRA này;
+`torchao` 0.18 yêu cầu API PyTorch mới hơn và lỗi ngay ở bước import. File
+`requirements.txt` chỉ cài `torchao` trên Linux/Colab.
