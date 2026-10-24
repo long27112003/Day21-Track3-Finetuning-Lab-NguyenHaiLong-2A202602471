@@ -1,6 +1,6 @@
 # Lab 21 — Evaluation Report
 
-**Họ tên**: Nguyễn Hải Long  **MSSV**: 2A202602471  **Ngày**: 07/10/2026
+**Họ tên**: Nguyễn Hải Long  **MSSV**: 2A202602471
 **Tier**: `T4`  **Base model**: `unsloth/Qwen3.5-4B`  **GPU thực tế**: `T4 16GB (Google Colab)`
 
 > Mọi con số dưới đây phải khớp với file trong `results/`. Grader kiểm tra chéo.
@@ -142,7 +142,9 @@ Tôi sẽ xây một tập hồi quy mới, không dùng để chọn mẫu repl
 ## Phụ lục — thưởng đã làm
 
 - [ ] B1 NB6 merge + hot-swap
-- [ ] B2 dataset miền riêng (`data/CUSTOM_DATASET.md`)
+- [x] B2 dataset miền riêng (`data/CUSTOM_DATASET.md`): 250 ticket CNTT trường học, gồm 200 train và 50 validation; không dùng để thay điểm core.
 - [ ] B3 reasoning-trace collapse (hai `MASK_MODE`, kèm `valid_trace_rate`)
 - [ ] B4 quét rank có kiểm soát
 - [x] B5 HuggingFace Hub — link: https://huggingface.co/long2711/qwen3.5-cs-triage-lora
+
+Corpus B2 được tự biên soạn và sinh năm cách diễn đạt từ 50 tình huống nền, không lấy từ ticket người dùng thật. Script tạo dữ liệu kiểm tra 250 câu không trùng nhau và không trùng nguyên văn với các tập eval đóng băng. Cùng tình huống nền không bị chia qua hai split. Đây là bằng chứng dataset và quy trình khử nhiễm; chưa có kết quả huấn luyện/eval mô hình trên corpus này, nên tôi không gán cho nó điểm target trong bảng core.
