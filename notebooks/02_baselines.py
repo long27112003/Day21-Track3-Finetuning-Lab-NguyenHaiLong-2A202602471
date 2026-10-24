@@ -108,5 +108,5 @@ print(json.dumps(frozen, ensure_ascii=False, indent=2))
 #
 # %% [markdown]
 # ## ✅ Checkpoint NB2
-# - [ ] `results/baselines_frozen.json` có cả (a) và (b)
-# - [ ] Bạn đã đọc và chấp nhận con số (b) — **trước** khi thấy bất kỳ kết quả train nào
+# - [x] `results/baselines_frozen.json` có cả (a) và (b)
+# - [x] Bạn đã đọc và chấp nhận con số (b) — **trước** khi thấy bất kỳ kết quả train nào

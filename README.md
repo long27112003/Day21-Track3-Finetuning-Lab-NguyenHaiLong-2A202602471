@@ -191,3 +191,20 @@ không tiếp tục chọn dữ liệu theo 15 câu holdout để tránh điều
 Trên Windows với PyTorch 2.6 CUDA 12.4, bỏ `torchao` khỏi môi trường LoRA này;
 `torchao` 0.18 yêu cầu API PyTorch mới hơn và lỗi ngay ở bước import. File
 `requirements.txt` chỉ cài `torchao` trên Linux/Colab.
+
+### Tái chạy bonus B3 và B4
+
+Sau NB1 (đã tạo split đóng băng), trong môi trường GPU cài đủ requirements và
+giữ `COMPUTE_TIER=T4` để dùng cùng base `unsloth/Qwen3.5-4B`:
+
+```bash
+python scripts/reasoning_trace_bonus.py
+python scripts/rank_sweep_bonus.py
+```
+
+B3 huấn luyện hai loss mask và ghi `results/reasoning_trace_bonus.json`;
+B4 giữ `text-linear`, quét rank 8/16/64 và ghi `results/rank_sweep.json`.
+Mỗi script dùng lại adapter/result đã hoàn thành nếu chạy lại sau gián đoạn.
+Adapter lớn được giữ cục bộ trong `adapters/`; JSON kết quả và mã tái chạy
+được nộp trong repo. B3 dùng rationale tổng hợp từ train split; B3/B4 đo
+trên RTX 3060 12 GB và không thay các bảng core đo trên T4.

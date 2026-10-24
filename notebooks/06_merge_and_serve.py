@@ -103,7 +103,7 @@ report.write_json({"adapters": available, "prompt": ticket, "outputs": hot_swap_
 
 # %% [markdown]
 # ## ✅ Checkpoint NB6
-# - [ ] `results/merge_check.json` — điểm sau merge không tụt quá 0.01
-# - [ ] Đã hoán đổi ≥2 adapter trên **cùng một** base đang nạp
+# - [x] `results/merge_check.json` — điểm sau merge không tụt quá 0.01
+# - [x] Đã hoán đổi ≥2 adapter trên **cùng một** base đang nạp
 #
 # → Ngày 20 (Model Serving) là nơi biến việc này thành một endpoint đa người thuê.

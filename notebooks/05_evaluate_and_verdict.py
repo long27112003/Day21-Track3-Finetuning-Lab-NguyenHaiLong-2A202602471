@@ -200,7 +200,7 @@ report.write_json(rows, "qualitative.json", results_dir=ROOT / "results")
 
 # %% [markdown]
 # ## ✅ Checkpoint NB5
-# - [ ] `results/verdict.json` — có phán quyết pass/fail
-# - [ ] `results/autopsy.json` — ba cấu hình sai đã được chấm trên thang đo tác vụ
-# - [ ] Bảng ba baseline đã đủ
-# - [ ] `results/qualitative.json` — có cả ca thắng lẫn ca thua
+# - [x] `results/verdict.json` — có phán quyết pass/fail
+# - [x] `results/autopsy.json` — ba cấu hình sai đã được chấm trên thang đo tác vụ
+# - [x] Bảng ba baseline đã đủ
+# - [x] `results/qualitative.json` — có cả ca thắng lẫn ca thua

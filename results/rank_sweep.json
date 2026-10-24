@@ -1,0 +1,52 @@
+[
+  {
+    "rank": 8,
+    "adapter": "adapters/rank_r8",
+    "reused": true,
+    "target": 0.965,
+    "latency_ms": 2094.8,
+    "eval_n": 50,
+    "placement": "text-linear",
+    "alpha": 16,
+    "learning_rate": 0.0001,
+    "max_steps": 30,
+    "trainable_params": 16232448,
+    "final_train_loss": 0.4569754421710968,
+    "train_seconds": 647.5,
+    "peak_vram_gb": 8.440308094024658,
+    "hardware": "NVIDIA GeForce RTX 3060 12 GB",
+    "training_source": "local first-run stdout log; restored after interrupted rank64 attempt"
+  },
+  {
+    "rank": 16,
+    "adapter": "adapters/rank_r16",
+    "placement": "text-linear",
+    "alpha": 32,
+    "learning_rate": 0.0001,
+    "max_steps": 30,
+    "trainable_params": 32464896,
+    "final_train_loss": 0.35178965926170347,
+    "train_seconds": 647.6,
+    "peak_vram_gb": 8.682190418243408,
+    "target": 0.98,
+    "latency_ms": 2238.4,
+    "eval_n": 50,
+    "hardware": "NVIDIA GeForce RTX 3060 12 GB"
+  },
+  {
+    "rank": 64,
+    "adapter": "adapters/rank_r64",
+    "placement": "text-linear",
+    "alpha": 128,
+    "learning_rate": 0.0001,
+    "max_steps": 30,
+    "trainable_params": 129859584,
+    "final_train_loss": 0.23895035213402782,
+    "train_seconds": 668.8,
+    "peak_vram_gb": 10.312088012695312,
+    "target": 1.0,
+    "latency_ms": 2304.4,
+    "eval_n": 50,
+    "hardware": "NVIDIA GeForce RTX 3060 12 GB"
+  }
+]

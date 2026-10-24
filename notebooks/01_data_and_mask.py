@@ -181,9 +181,9 @@ print(f"train={len(train)}  val={len(val)}  -> {split_dir}")
 # %% [markdown]
 # ## ✅ Checkpoint NB1
 #
-# - [ ] `results/template_check.json` — biết template có giữ `<think>` không
-# - [ ] `results/mask_proof.json` — hai assert đều xanh
-# - [ ] `results/token_stats.json` — có p95
-# - [ ] `data/split/{train,val}.jsonl` — seed 42
+# - [x] `results/template_check.json` — biết template có giữ `<think>` không
+# - [x] `results/mask_proof.json` — hai assert đều xanh
+# - [x] `results/token_stats.json` — có p95
+# - [x] `data/split/{train,val}.jsonl` — seed 42
 #
 # → Sang **NB2**: đóng băng tập eval và đo ba baseline **trước khi** train.

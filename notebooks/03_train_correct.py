@@ -177,6 +177,6 @@ print(json.dumps(row, ensure_ascii=False, indent=2))
 
 # %% [markdown]
 # ## ✅ Checkpoint NB3
-# - [ ] `adapters/correct/` tồn tại
-# - [ ] `results/runs.csv` có một dòng `correct`
-# - [ ] Bạn đã ghi lại loss cuối và peak VRAM
+# - [x] `adapters/correct/` tồn tại
+# - [x] `results/runs.csv` có một dòng `correct`
+# - [x] Bạn đã ghi lại loss cuối và peak VRAM
